@@ -1,0 +1,562 @@
+$(document).ready(function(){
+ const dateya = new Date();
+    let bulandefault = dateya.getMonth()+1;
+    let tahundefault = dateya.getFullYear();
+    let tahun = tahundefault;
+    getbulan(tahun);
+    ktg_tfml(tahun)
+});
+
+function getbulan(tahun){
+
+
+  $.ajax({
+        url:'models/laporan_penjualan/get_bulanjs.php',
+        method:'POST',
+        data:{tahun:tahun},
+        dataType:'json',      
+        success:function(result){
+        
+          if(result == null){
+            get_header(tahun);
+            //Swal.fire('Any fool can use a computer'); 
+            //location.reload();
+            // $("#tambah").hide();
+            // $("#changetahun").hide();
+            // $("#data_tabelfull").hide();
+          }else{
+            // $("#data_tabelfull").show();
+
+            get_header(tahun);
+
+            $.each(result,function(key,value){
+            let bulan = value.bulan;
+            let tahun = value.tahun;
+        
+            if(bulan == "January"){
+              let tabel ="tabel1"; 
+           
+                get_tables(bulan,tahun,tabel)
+                showdata1(bulan,tahun);
+                return showdata1(bulan,tahun);
+            }
+            else if(bulan == "February" ){
+              let tabel ="tabel2";
+              get_tables(bulan,tahun,tabel)
+              showdata1(bulan,tahun);
+            }else if(bulan == "March"){
+              let tabel ="tabel3";
+              get_tables(bulan,tahun,tabel)
+              showdata1(bulan,tahun);
+              return showdata1(bulan,tahun);
+            }else
+            if(bulan == "April"){
+              let tabel ="tabel4";
+              get_tables(bulan,tahun,tabel)
+              showdata1(bulan,tahun);
+              return showdata1(bulan,tahun);
+
+            }else
+            if(bulan == "May"){
+              let tabel ="tabel5";
+              get_tables(bulan,tahun,tabel)
+              showdata1(bulan,tahun);
+              return showdata1(bulan,tahun);
+            }else
+            if(bulan == "June"){
+              let tabel ="tabel6";
+              get_tables(bulan,tahun,tabel)
+              showdata1(bulan,tahun);
+              return showdata1(bulan,tahun);
+            }else
+            if(bulan == "July"){
+              let tabel ="tabel7";
+              get_tables(bulan,tahun,tabel)
+              showdata1(bulan,tahun);
+              return showdata1(bulan,tahun);
+
+            }else
+            if(bulan == "August"){
+              let tabel ="tabel8";
+              get_tables(bulan,tahun,tabel)
+              showdata1(bulan,tahun);
+              return showdata1(bulan,tahun);
+
+            }else
+            if(bulan == "September"){
+              let tabel ="tabel9";
+              get_tables(bulan,tahun,tabel)
+              showdata1(bulan,tahun);
+              return showdata1(bulan,tahun);
+
+            }else
+            if(bulan == "October"){
+              let tabel ="tabel10";
+              get_tables(bulan,tahun,tabel)
+              showdata1(bulan,tahun);
+              return showdata1(bulan,tahun);
+
+            }else
+            if(bulan == "November"){
+              let tabel ="tabel11";
+              get_tables(bulan,tahun,tabel)
+              showdata1(bulan,tahun);
+              return showdata1(bulan,tahun);
+
+            }else
+            if(bulan == "December"){
+              let tabel ="tabel12";
+              get_tables(bulan,tahun,tabel)
+              showdata1(bulan,tahun);
+              return showdata1(bulan,tahun);
+            }
+         });
+          }
+        
+        }
+             
+      });
+}
+
+function get_header(tahun){
+    let data_headr =`
+    <br><br>
+    <div  class="text-center"><h4>Penjualan E-Commerce DGM BMI ${tahun}</h4></div><br>
+    <div id="tabeldata"></div>
+    `;
+    $("#header_data").html(data_headr);
+
+  }
+
+
+  function get_tables(bulan,tahun,tabel){
+    let id ="#"+tabel;
+  
+    let substr_bulan = bulan.substr(0,3);
+    let dataTable =`
+    <table id="${bulan}" class='display table-info' style='width:100%'>                    
+                  <thead  id='thead'class ='thead'>
+                    <tr>
+                              <th>${substr_bulan}</th>
+                              <th>IL</th>
+                              <th>Week 1</th>
+                              <th>L1</th>
+                              <th>ML1</th>
+                              <th>Week 2</th>
+                              <th>L2</th>
+                              <th>ML2</th>
+                              <th>Week 3</th>
+                              <th>L3</th>
+                              <th>ML3</th>
+                              <th>Week 4</th>
+                              <th>L4</th>
+                              <th>ML4</th>
+                              <th>Total</th>
+                              <th>Target</th>
+                              <th>Ach %</th>
+                              <th>Growth</th>
+                              <th>FL</th> 
+                              <th>FML</th>    
+                    </tr>
+                  </thead>
+                </table>
+  
+     
+    `;
+  
+    $(id).empty().html(dataTable);
+  };
+  
+
+  function showdata1(bulan,tahun){
+
+    let id ="#"+bulan;
+    //$(id).DataTable().destroy();
+      $.ajax({
+      url: 'models/laporan_penjualan/tampildata.php',
+      method :'POST',
+      data:{page:bulan,tahun:tahun},
+        cache:true,
+        dataType:'json',
+          success: function(response){
+              $(id).DataTable({
+                responsive: true,
+                rowReorder: {
+                  selector: 'td:nth-child(2)'
+              },
+                "ordering": false,
+                 "destroy":true,
+                  dom: 'Plfrtip',
+                    scrollCollapse: true,
+                    paging:false,
+                    "bPaginate":false,
+                    "bLengthChange": false,
+                    "bFilter": true,
+                    "bInfo": false,
+                    "bAutoWidth": false,
+                    dom: 'lrt',
+                    fixedColumns:   {
+                       // left: 1,
+                        right: 1
+                    },
+                    "order":[[0,'desc']],
+                
+                    data: response,
+                 
+                    'rowCallback': function(row, data, index){
+                     
+                      var temp=data.growth;
+                          
+                            if(temp < 0){
+                                $(row).find('td:eq(17)').css('color', 'red');
+                            }else{
+                              $(row).find('td:eq(17)').css('color', 'black');
+  
+                            }
+                          
+                          },
+                          columns: [
+                       
+                              { 'data': 'nama_toko' },
+                            
+                              {
+                                 data: 'l0', className: "text-end", render: $.fn.dataTable.render.number(',', '.', 0, '')
+                              },
+                               {
+                                 data: 'w1',  
+                                 className:"text-end",
+                                 "render":function(data,type,row){
+                                 console.log(row.amount);
+                                  let nama = row.nama_toko;
+                                  let bulan = row.bulan;
+                                  let tahun = row.tahun;
+                                  let period = 'w1';
+                                  let targer = row.target;
+                                  let amount = data;
+                                  let list  = 'l1';
+                                  let ml1 = row.ml1;
+                                  let l1  = row.l1;
+                                  let ml = 'ml1';
+                                  if(type === 'display'){
+                                                  html = `<span type="button" style="cursor:pointer" class="editdata" 
+                                                  data-li ="${l1}" data-nama="${nama}" data-bulan="${bulan}" data-tahun="${tahun}" data-period="${period}"
+                                                  data-target="${targer}" data-amount="${amount}" data-list="${list}" data-ml ="${ml}" data-ml1="${ml1}"
+                                                 >${data}</span>`;
+                                                      }
+                                                      return html
+                                                  },
+                                 },
+                                
+  
+                               {
+                                 data: 'l1', className: "text-end", 
+                                 "render": function(data,type,row){
+                                let nama = row.nama_toko;
+                                let bulan = row.bulan;
+                                let tahun = row.tahun;
+                                let li = 'l1';  
+                                if(type === 'display'){
+                                                html = `<span type="button" style="cursor:pointer" class="ListingData" 
+                                                data-nama="${nama}" data-bulan="${bulan}" data-tahun="${tahun}" data-li="${li}" 
+                                                data-bs-toggle="modal" data-bs-target="#ListingDataModal">${data}</span>`;
+                                                    }
+                                                    return html
+                                  },
+                              },
+                              {
+                                 data: 'ml1', className: "text-end",
+                                 "render": function(data,type,row){
+                                let nama = row.nama_toko;
+                                let bulan = row.bulan;
+                                let tahun = row.tahun;
+                                let ml = 'ml1';  
+                                if(type === 'display'){
+                                                html = `<span type="button" style="cursor:pointer" class="WeekData_ml" 
+                                                data-nama="${nama}" data-bulan="${bulan}" data-tahun="${tahun}" data-ml="${ml}" 
+                                                data-bs-toggle="modal" data-bs-target="#MLDataMlModal">${data}</span>`;
+                                                    }
+                                                    return html
+                                  },
+                              },
+                               {
+                                 data: 'w2', className: "text-end",
+                                 "render":function(data,type,row){
+                                  let nama = row.nama_toko;
+                                  let bulan = row.bulan;
+                                  let tahun = row.tahun;
+                                  let period = 'w2';
+                                  let targer = row.target;
+                                  let amount = data;
+                                  let list  = 'l2';
+                                  let ml = 'ml2';
+                                  let ml2 = row.ml2;
+                                  let l2 = row.l2;
+                                  if(type === 'display'){
+                                                  html = `<span type="button" style="cursor:pointer" class="editdata" 
+                                                  data-li ="${l2}"  data-nama="${nama}" data-bulan="${bulan}" data-tahun="${tahun}" data-period="${period}"
+                                                  data-target="${targer}" data-amount="${amount}" data-list="${list}" data-ml ="${ml}" data-ml2 ="${ml2}"
+                                                 >${data}</span>`;
+                                                      }
+                                                      return html
+                                                  },
+                               },
+                                {
+                                 data: 'l2', className: "text-end", 
+                                 "render": function(data,type,row){
+                                let nama = row.nama_toko;
+                                let bulan = row.bulan;
+                                let tahun = row.tahun;
+                                let li = 'l2';  
+                                if(type === 'display'){
+                                                html = `<span type="button" style="cursor:pointer" class="ListingData" 
+                                                data-nama="${nama}" data-bulan="${bulan}" data-tahun="${tahun}" data-li="${li}" 
+                                                data-bs-toggle="modal" data-bs-target="#ListingDataModal">${data}</span>`;
+                                                    }
+                                                    return html
+                                  },
+  
+                                },
+                                {
+                                 data: 'ml2', className: "text-end",
+                                 "render": function(data,type,row){
+                                let nama = row.nama_toko;
+                                let bulan = row.bulan;
+                                let tahun = row.tahun;
+                                let ml = 'ml2';  
+                                if(type === 'display'){
+                                                html = `<span type="button" style="cursor:pointer" class="WeekData_ml" 
+                                                data-nama="${nama}" data-bulan="${bulan}" data-tahun="${tahun}" data-ml="${ml}" 
+                                                data-bs-toggle="modal" data-bs-target="#MLDataMlModal">${data}</span>`;
+                                                    }
+                                                    return html
+                                  },
+                              },
+                                 {
+                                 data: 'w3', className: "text-end", 
+                                 "render":function(data,type,row){
+                                  let nama = row.nama_toko;
+                                  let bulan = row.bulan;
+                                  let tahun = row.tahun;
+                                  let period = 'w3';
+                                  let targer = row.target;
+                                  let amount = data;
+                                  let list  = 'l3';
+                                  let ml = 'ml3';
+                                  let ml3 = row.ml3;
+                                  let l3 = row.l3;
+                                  if(type === 'display'){
+                                                  html = `<span type="button" style="cursor:pointer" class="editdata" 
+                                                  data-li ="${l3}" data-nama="${nama}" data-bulan="${bulan}" data-tahun="${tahun}" data-period="${period}"
+                                                  data-target="${targer}" data-amount="${amount}" data-list="${list}" data-ml ="${ml}" data-ml3 ="${ml3}"
+                                                 >${data}</span>`;
+                                                      }
+                                                      return html
+                                                  },
+                               },
+                                {
+                                 data: 'l3', className: "text-end", 
+                                 "render": function(data,type,row){
+                                let nama = row.nama_toko;
+                                let bulan = row.bulan;
+                                let tahun = row.tahun;
+                                let li = 'l3';  
+                                if(type === 'display'){
+                                                html = `<span type="button" style="cursor:pointer" class="ListingData" 
+                                                data-nama="${nama}" data-bulan="${bulan}" data-tahun="${tahun}" data-li="${li}" 
+                                                data-bs-toggle="modal" data-bs-target="#ListingDataModal">${data}</span>`;
+                                                    }
+                                                    return html
+                                  },
+                                },
+                                
+                                {
+                                 data: 'ml3', className: "text-end",
+                                 "render": function(data,type,row){
+                                let nama = row.nama_toko;
+                                let bulan = row.bulan;
+                                let tahun = row.tahun;
+                                let ml = 'ml3';  
+                                if(type === 'display'){
+                                                html = `<span type="button" style="cursor:pointer" class="WeekData_ml" 
+                                                data-nama="${nama}" data-bulan="${bulan}" data-tahun="${tahun}" data-ml="${ml}" 
+                                                data-bs-toggle="modal" data-bs-target="#MLDataMlModal">${data}</span>`;
+                                                    }
+                                                    return html
+                                  },
+                              },
+                                 {
+                                 data: 'w4', className: "text-end",
+                                 "render":function(data,type,row){
+                                  let nama = row.nama_toko;
+                                  let bulan = row.bulan;
+                                  let tahun = row.tahun;
+                                  let period = 'w4';
+                                  let targer = row.target;
+                                  let amount = data;
+                                  let list  = 'l4';
+                                  let ml ='ml4';
+                                  let ml4 = row.ml4;
+                                  let l4 = row.l4;
+                                  if(type === 'display'){
+                                                  html = `<span type="button" style="cursor:pointer" class="editdata" 
+                                                  data-li ="${l4}" data-nama="${nama}" data-bulan="${bulan}" data-tahun="${tahun}" data-period="${period}"
+                                                  data-target="${targer}" data-amount="${amount}" data-list="${list}" data-ml ="${ml}" data-ml4="${ml4}"
+                                                 >${data}</span>`;
+                                                      }
+                                                      return html
+                                                  },
+                               },
+                                {
+                                 data: 'l4', className: "text-end", 
+                                 "render": function(data,type,row){
+                                let nama = row.nama_toko;
+                                let bulan = row.bulan;
+                                let tahun = row.tahun;
+                                let li = 'l4';  
+                                if(type === 'display'){
+                                                html = `<span type="button" style="cursor:pointer" class="ListingData" 
+                                                data-nama="${nama}" data-bulan="${bulan}" data-tahun="${tahun}" data-li="${li}" 
+                                                data-bs-toggle="modal" data-bs-target="#ListingDataModal">${data}</span>`;
+                                                    }
+                                                    return html
+                                  },
+                                },
+                                {
+                                 data: 'ml4', className: "text-end",
+                                 "render": function(data,type,row){
+                                let nama = row.nama_toko;
+                                let bulan = row.bulan;
+                                let tahun = row.tahun;
+                                let ml = 'ml4';  
+                                if(type === 'display'){
+                                                html = `<span type="button" style="cursor:pointer" class="WeekData_ml" 
+                                                data-nama="${nama}" data-bulan="${bulan}" data-tahun="${tahun}" data-ml="${ml}" 
+                                                data-bs-toggle="modal" data-bs-target="#MLDataMlModal">${data}</span>`;
+                                                    }
+                                                    return html
+                                  },
+                                },
+                                 {
+                                 data: 'total', className: "text-end"                              },
+                               {
+                                 data: 'target', className: "text-end",render: $.fn.dataTable.render.number(',', '.', 2, ''),
+                                 
+                               },
+                               {
+                                 data: 'ach', className: "text-end", render: $.fn.dataTable.render.number(',', '.', 2, '')
+                               },
+                               {
+                                 data: 'growth', className: "text-end", render: $.fn.dataTable.render.number(',', '.', 2, '')
+  
+                               },
+                                {
+                                 data: 'lt', className: "text-end", render: $.fn.dataTable.render.number(',', '.', 0, '')
+                                },
+                                {
+                                 data: 'fml', className: "text-end",
+                                 "render": function(data,type,row){
+                                
+                                  let nama = row.nama_toko;
+                                  let bulan = row.bulan;
+                                  let tahun = row.tahun;
+                           
+                                    
+                                  if(type === 'display'){
+                                                  html = `<span type="button" style="cursor:pointer" class="fullData_ml" 
+                                                  data-nama="${nama}" data-bulan="${bulan}" data-tahun="${tahun}" 
+                                                  data-bs-toggle="modal" data-bs-target="#FullDataMlModal">${data}</span>`;
+                                                      }
+                                                      return html
+                                    },
+                                  
+                                }
+  
+                          ]      
+             
+             });
+            
+          
+         
+                    
+      }
+  
+      });
+  
+  }
+
+
+  var $sidebarAndWrapper = $("#sidebar,#wrapper");
+
+//edit data 
+$(document).on("click",".editdata",function(){
+  let nama = $(this).data('nama');
+  let bulan = $(this).data('bulan');
+  let tahun = $(this).data('tahun');
+  let target = $(this).data('target');
+  let ml = $(this).data('ml');
+  
+  let ttl_ml = '';
+  if(ml == 'ml1'){
+    ttl_ml = $(this).data('ml1');
+  }else if(ml == 'ml2'){
+    ttl_ml = $(this).data('ml2');
+  }else if(ml == 'ml3'){
+    ttl_ml = $(this).data('ml3');
+  }else if(ml == 'ml4'){
+    ttl_ml = $(this).data('ml4');
+  }
+
+
+  let list = $(this).data('list');
+
+  let  li = '';
+  if(list == 'l1'){
+    li = $(this).data('li');
+  }else if(list == 'l2'){
+    li = $(this).data('li');
+  }else if(list == 'l3'){
+    li = $(this).data('li');
+  }else if(list == 'l4'){
+    li = $(this).data('li');
+  }
+   let amount = $(this).data('amount')
+  let period = $(this).data('period');
+
+  $("#edit_data").show();
+  $("#data_tabelfull").hide();
+  $("#header_data").hide();
+  $("#edit_data").load('views/edit_data_penjualan/edit_data.php?',{nama:nama,period:period,bulan:bulan,
+    tahun:tahun,target:target,ttl_ml:ttl_ml,li:li,amount:amount});
+});
+
+
+function ktg_tfml(tahun){
+
+  $.ajax({
+    url:'models/manylist/datalist_kategori.php',
+    method:'POST',
+    data:{tahun:tahun},
+    dataType:'json',
+    success: function(reslut){
+   
+      $.each(reslut,function(key,val){
+      
+      let id ="#"+key+"_total";
+      $(id).empty().html(val);
+
+   if(key == "ALL"){
+    let id ="#"+key+"_total";
+    $(id).empty().html(val);
+   }else if(key == "RIZEK"){
+    let id ="#"+key+"_total";
+    $(id).empty().html(val);
+   }
+
+      });
+  
+    }
+  })
+  }
+//end edit data
+
+
